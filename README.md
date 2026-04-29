@@ -1,1 +1,1 @@
-A fork of the web-RPG Proto23, originally meant to include more 'wuxia' and 'cultivation' influences. Currently abandoned - might continue working on it some time in the future.
+A fork of the web-RPG Proto23. A mix of random additions and new story. Heavy WIP
