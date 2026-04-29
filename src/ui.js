@@ -1573,6 +1573,8 @@ function offline_a(){
   global.offline_evil_index=Math.sqrt(global.offline_evil_index+2100)/45;
 }
 
+// anything and everything to do with the tooltip that is created by hovering over something in a menu
+// @Todo refactor this bruh
 function dscr(c, what, type, ttl, dsc, id) {
   const _ = {};
   id = id || 0;
@@ -1585,6 +1587,8 @@ function dscr(c, what, type, ttl, dsc, id) {
   global.dscr.style.zIndex = 99999;
 
   if (!type || type === 1) {
+
+    // change the color of the item's name in accordance with its rarity
     _.label = addElement(global.dscr, "div", "d_l");
     _.label.innerHTML = what.name;
     switch (what.rar) {
@@ -1624,6 +1628,7 @@ function dscr(c, what, type, ttl, dsc, id) {
           break;
         }
     }
+
     _.text = addElement(global.dscr, "div", "d_t");
     _.text.innerHTML = typeof what.desc === "function" ? what.desc(what) : what.desc;
     if (what.slot > 0) {
@@ -1767,6 +1772,7 @@ function dscr(c, what, type, ttl, dsc, id) {
         if (what.rot) slti.innerHTML += '(<span style="color:orange">perishable</span>)';
       } else if (what.id >= 3e3 && what.id < 5e3) slti.innerHTML += "Medicine/Tool"; else if (what.id >= 5e3 && what.id < 9e3) slti.innerHTML += "Material/Misc"; else slti.innerHTML += "Book";
     }
+
     if (what.id < 3e3) {
       dom.dtrd = addElement(_.sltic, "small");
       dom.dtrd.innerHTML = "Tried: ";
@@ -1775,6 +1781,7 @@ function dscr(c, what, type, ttl, dsc, id) {
       dom.dtrd.style.float = "right";
       if (what.data.tried === true) dom.dtrd.innerHTML += '<span style="color: lime">Yes</span>'; else dom.dtrd.innerHTML += '<span style="color: crimson">Never</span>';
     }
+
     if (what.id >= 9e3 && what.id < 1e4) {
       dom.dtrd = addElement(_.sltic, "small");
       dom.dtrd.innerHTML = "Read: ";
