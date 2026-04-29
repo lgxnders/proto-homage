@@ -9185,10 +9185,10 @@ function define_shields() {
 }
 
 function define_accessories() {
-    acc.river_charm = new Chs();
+    acc.river_charm = new Eqp();
     acc.river_charm.id = 80001;
     acc.river_charm.name = "Water Charm";
-    acc.river_charm.desc = "<p style='color:red;'>PLACEHOLDER</p>";
+    acc.river_charm.desc = "A strange blue charm given to you by an old man. When you bring it up to your hear, you can hear water flowing.";
     acc.river_charm.slot = 8;
     acc.river_charm.stype = 3;
     acc.river_charm.rar = 2;
@@ -15596,36 +15596,36 @@ function renderItem(obj){
     inv_slot.addEventListener('keydown',listen_k);
     global.flags.kfocus=true;
     if(obj.important===false&&obj.slot){
-      dom.inv_del = addElement(inv_slot_c,'span',null,'del_b');
+      dom.inv_del = addElement(inv_slot_c,'small',null,'del_b');
       dom.inv_del.innerHTML = 'x';
       addDesc(dom.inv_del,null,2,'Throw away','Deletes <span style="color:cyan">\"'+obj.name+'\"</span> permanently');
       dom.inv_del.addEventListener('click',()=>{
-        if(obj.data.uid===you.eqp[obj.slot-1].data.uid){
-
           let prm = addElement(document.body,'div');
           prm.style.backgroundColor='grey';
-          prm.style.width=document.body.clientWidth;
-          prm.style.height=document.body.clientHeight;
-          prm.style.position='absolute';
-          prm.style.left=0;
-          prm.style.top=0;
+          prm.style.width=window.innerWidth+'px';
+          prm.style.height=window.innerHeight+'px';
+          prm.style.position='fixed';
+          prm.style.left='0px';
+          prm.style.top='0px';
           prm.style.opacity=.4;
+          prm.style.zIndex=9998;
 
           let prm2 = addElement(document.body,'div');
-          prm2.style.position='absolute';
-          prm2.style.top=document.body.clientHeight/2-40;
-          prm2.style.left=1300/2-195;
-          prm2.style.width=390;
-          prm2.style.height=80;prm2.style.border='4px black solid';
-          prm2.style.padding=5;prm2.style.backgroundColor='lightgrey';
+          prm2.style.position='fixed';
+          prm2.style.top=(window.innerHeight/2-40)+'px';
+          prm2.style.left=(window.innerWidth/2-195)+'px';
+          prm2.style.width='390px';
+          prm2.style.height='80px';prm2.style.border='4px black solid';
+          prm2.style.padding='5px';prm2.style.backgroundColor='lightgrey';
+          prm2.style.zIndex=9999;
 
           let pin = addElement(prm2,'div');
-          pin.style.height=32;
+          pin.style.height='32px';
           pin.innerHTML='Really destroy \"'+obj.name+'\"\?';
           pin.style.textAlign='center';
           pin.style.width='100%';
           pin.style.borderBottom='2px solid black';
-          pin.style.paddingTop=10;
+          pin.style.paddingTop='10px';
 
           let pcon = addElement(prm2,'div');
           pcon.style.display='flex';
@@ -15635,22 +15635,20 @@ function renderItem(obj){
           let phai = addElement(pcon,'div');
           phai.style.width='50%';
           phai.innerHTML='YES';
-          phai.style.paddingTop=9;
-          phai.style.paddingBottom=9;
+          phai.style.paddingTop='9px';
+          phai.style.paddingBottom='9px';
 
           let piie = addElement(pcon,'div');
           piie.style.width='50%';
           piie.innerHTML='NO';
-          piie.style.paddingTop=9;
-          piie.style.paddingBottom=9
+          piie.style.paddingTop='9px';
+          piie.style.paddingBottom='9px';
 
           phai.addEventListener('mouseenter',function(){this.style.backgroundColor='#666'});piie.addEventListener('mouseenter',function(){this.style.backgroundColor='#666'});
           phai.addEventListener('mouseleave',function(){this.style.backgroundColor='darkgrey'});piie.addEventListener('mouseleave',function(){this.style.backgroundColor='darkgrey'});
-          phai.addEventListener('click',()=>{giveSkExp(skl.rccln,(2**obj.rar)*5-9.5);giveSkExp(skl.thr,.5);global.stat.thrt++;removeItem(obj);document.body.removeChild(prm);document.body.removeChild(prm2)});
+          phai.addEventListener('click',()=>{if(obj.slot&&obj.data.uid===you.eqp[obj.slot-1].data.uid) unequip(obj);giveSkExp(skl.rccln,(2**obj.rar)*5-9.5);giveSkExp(skl.thr,.5);global.stat.thrt++;removeItem(obj);empty(global.dscr);document.body.removeChild(prm);document.body.removeChild(prm2)});
           piie.addEventListener('click',()=>{document.body.removeChild(prm);document.body.removeChild(prm2)});
-        }
-        else{giveSkExp(skl.rccln,(2**obj.rar)*5-9.5);removeItem(obj);giveSkExp(skl.thr,.5);global.stat.thrt++;empty(global.dscr);}}
-      );}
+      });}
     if(obj.slot===5||obj.slot===6){
       dom.eq_l = addElement(inv_slot_c,'small',null,'eq_l'); dom.eq_l.innerHTML = 'L'; addDesc(dom.eq_l, obj);
       dom.eq_l.addEventListener('click',()=>{if(obj.data.uid!==you.eqp[4].data.uid&&obj.data.uid!==you.eqp[5].data.uid) {obj.slot=5;equip(obj);} else if(obj.data.uid!==you.eqp[4].data.uid&&obj.data.uid===you.eqp[5].data.uid){unequip(obj);obj.slot=5;equip(obj);}else {unequip(obj);dom.eq_l.style.backgroundColor='royalblue';this.children[0].removeChild(this.children[0].lastChild)}});
@@ -15671,8 +15669,8 @@ function renderItem(obj){
     addDesc(dom.inv_dss,null,2,'Disassemble','Deconstruct <span style="color:cyan">\"'+obj.name+'\"</span> into:<br>'+t);
     dom.inv_dss.addEventListener('click',()=>{
       if(obj.slot&&obj.data.uid===you.eqp[obj.slot-1].data.uid){
-        let prm = addElement(document.body,'div'); prm.style.backgroundColor='grey';prm.style.width=document.body.clientWidth;prm.style.height=document.body.clientHeight;prm.style.position='absolute';prm.style.left=0;prm.style.top=0;prm.style.opacity=.4;
-        let prm2 = addElement(document.body,'div'); prm2.style.position='absolute';prm2.style.top=document.body.clientHeight/2-40;prm2.style.left=1300/2-195;prm2.style.width=390;prm2.style.height=90;prm2.style.border='4px black solid';prm2.style.padding=5;prm2.style.backgroundColor='lightgrey';
+        let prm = addElement(document.body,'div'); prm.style.backgroundColor='grey';prm.style.width=window.innerWidth+'px';prm.style.height=window.innerHeight+'px';prm.style.position='fixed';prm.style.left='0px';prm.style.top='0px';prm.style.opacity=.4;
+        let prm2 = addElement(document.body,'div'); prm2.style.position='fixed';prm2.style.top=(window.innerHeight/2-40)+'px';prm2.style.left=(window.innerWidth/2-195)+'px';prm2.style.width='390px';prm2.style.height='90px';prm2.style.border='4px black solid';prm2.style.padding='5px';prm2.style.backgroundColor='lightgrey';
         let pin = addElement(prm2,'div'); pin.style.height=42; pin.innerHTML='You are currently wearing \"<span style="color:crimson">'+obj.name+'</span>\"<br>Really deconstruct?';pin.style.textAlign='center';pin.style.width='100%';pin.style.borderBottom='2px solid black';pin.style.paddingTop=10;
         let pcon = addElement(prm2,'div'); pcon.style.display='flex';pcon.style.textAlign='center';pcon.style.backgroundColor='darkgrey';
         let phai = addElement(pcon,'div'); phai.style.width='50%'; phai.innerHTML='YES';phai.style.paddingTop=9;phai.style.paddingBottom=9;
@@ -15716,7 +15714,7 @@ function renderItem(obj){
 
   inv_slot.addEventListener("click", function (x) {
       if (!obj || !obj.use(x)) {
-          print("The object you are trying to use contains missing data. Please check the definition for this item.");
+          console.log("The object you are trying to use contains missing data. Please check the definition for this item.");
           return;
       }
 

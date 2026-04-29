@@ -92,8 +92,10 @@ input:focus {
     position: absolute;
     right: 26px;
     width: 16px;
+	height: 15px;
     text-align: center;
-    margin-top: -19px;
+    margin-top: -26px;
+	padding: 3px 0 4px 0;
 }
 
 .dss_b {
@@ -579,7 +581,7 @@ input:focus {
 }
 
 #dscr {
-    position: absolute;
+    position: fixed;
     border: solid 5px lightgrey;
     outline: solid 3px black;
     background: linear-gradient(90deg, #333, #111);
