@@ -377,7 +377,7 @@ function save(verbose=false) {
         inta:   you.inta,
         intm:   you.intm,
         agla:   you.agla,
-        aglm:   you.agml,
+        aglm:   you.aglm,
         spda:   you.spda,
         spdm:   you.spdm,
         hpa:    you.hpa,
@@ -647,7 +647,7 @@ function load(save_data, verbose=false) {
     you.hpm = yu_s.hpm || 1;
     you.hp = you.hp > you.hpmax ? you.hpmax : you.hp;
     ['str', 'agl', 'int', 'spd'].forEach(s => {
-        you[s + '_r'] = yu_s[s + '_r'];
+        you[s + '_r'] = yu_s[s + '_r'] || 1;
         you[s + 'a'] = yu_s[s + 'a'] || 0;
         you[s + 'm'] = yu_s[s + 'm'] || 1;
     });
@@ -704,14 +704,14 @@ function load(save_data, verbose=false) {
 
     let saved_eff = [];
     try {
-        const parsed = JSON.parse(seg[4]);
+        const parsed = JSON.parse(seg[1]);
         if (Array.isArray(parsed)) {
             saved_eff = parsed;
         } else if (parsed && typeof parsed === 'object') {
             saved_eff = Object.values(parsed);
         }
     } catch (e) {
-        console.warn("Could not parse segment 4, will use an empty effects array as fallback.", e);
+        console.warn("Could not parse segment 1, will use an empty effects array as fallback.", e);
         saved_eff = [];
     }
 
@@ -728,9 +728,9 @@ function load(save_data, verbose=false) {
             }
         }
     });
-    global.flags.loadstate = false;    
+    global.flags.loadstate = false;
 
-    const d_global = JSON.parse(seg[1]);
+    const d_global = JSON.parse(seg[4]);
     global.sm = d_global.b;
     global.rm = d_global.a;
     global.spirits = d_global.f;
@@ -958,7 +958,6 @@ function load(save_data, verbose=false) {
             move_to_area(location, false);
         }
     }
-    if (global.current_location) move_to_area(location, false);
 
     const d_container = JSON.parse(seg[16]);
     if (d_container[0] && !d_container[0].c) {
@@ -1015,10 +1014,12 @@ function load(save_data, verbose=false) {
     eqpres();
     unequip(you.eqp[4], { save: true });
     unequip(you.eqp[5], { save: true });
+    you.stat_r();
 
     dom.d5_1_1.update();
     dom.d5_2_1.update();
     dom.d6.update();
+    update_db();
     update_d();
     dom.d3.update();
     update_m();
@@ -1030,6 +1031,11 @@ function load(save_data, verbose=false) {
     global.flags.rdng = false;
     global.flags.civil = true;
     global.flags.btl = false;
+    global.flags.sleepmode = false;
+    global.flags.loadstate = false;
+    global.flags.savestate = false;
+    global.flags.m_freeze = false;
+    global.timescale = d_global.u || 1;
     global.current_z = zone.nwh;
     global.current_m = creature.default;
     global.current_a = act.default;
@@ -12672,8 +12678,9 @@ function define_dom_references() { // @Todo organize
     dom.d8m2.innerHTML = 'Resume the fight';
     dom.d8m2.style.right='0px';dom.d8m2.style.position='absolute';
     dom.d8m2.addEventListener('click',function(){if(!global.flags.civil)global.flags.btl=true;});
-    dom.d7m_c = addElement(dom.d1m,'div','ainfo'); 
-    dom.d7m = addElement(dom.d7m_c,'small'); 
+    dom.d7m_c = addElement(dom.d1m,'div','ainfo');
+    dom.d7m_c.style.lineHeight = '1';
+    dom.d7m = addElement(dom.d7m_c,'small');
     dom.d7m.update = function () {
         if (global.current_z.name == "Somewhere") { 
             this.innerHTML = 'Zone: Somewhere';
@@ -13841,10 +13848,18 @@ function define_dom_references() { // @Todo organize
         fade(temp_txt);
         setTimeout(()=>{dom.sl.removeChild(temp_txt)},500)
     });
-    dom.sl_extra = addElement(dom.sl,'span',null,'sl'); dom.sl_extra.style.borderLeft='none';dom.sl_extra.innerHTML='<span style="color:crimson">game not saved!</span>';
-    dom.autosve = addElement(dom.sl,'span',null,'sl'); dom.autosve.innerHTML='Autosave';
-    dom.autosve.style.position='fixed';dom.autosve.style.width='auto'; dom.autosve.style.right='139px';dom.autosve.style.bottom='1px';
+    dom.sl_extra = addElement(dom.sl,'span',null,'sl');
+    dom.sl_extra.style.borderLeft='none';
+    dom.sl_extra.innerHTML='<span style="color:crimson">game not saved!</span>';
+
+    dom.autosve = addElement(dom.sl,'span',null,'sl');
+    dom.autosve.innerHTML='Autosave';
+    dom.autosve.style.position='fixed';
+    dom.autosve.style.width='auto';
+    dom.autosve.style.right='139px';
+    dom.autosve.style.bottom='1px';
     dom.autosve.style.paddingRight='20px';
+    
     dom.autosves = addElement(dom.autosve,'input'); dom.autosves.type='checkbox';
     dom.autosves.margin=0; dom.autosves.style.position='fixed';if(typeof InstallTrigger === 'undefined') dom.autosves.style.bottom='inherit';
     dom.autosves.addEventListener('click',function(){
@@ -16151,9 +16166,7 @@ function define_areas() {
             chs('Dark clouds loom over. They appear to be a bad omen.')
 
             achs('=> Check the Message Board', ()=>{
-                __dbgsp();
-                //move_to_area(chss.message_board,false);
-                //@Todo
+                move_to_area(chss.intro_message_board, false);
             });
 
             achs('=> Enter Dojo', () => {
@@ -16172,8 +16185,21 @@ function define_areas() {
     });
 
 
+    chss.intro_message_board = new Chs({
+      id: 103,
+      sl: () => {
+          u_loc('Village, Center Message Board');
+
+          chs('An empty, dilapitated wooden board lies ahead.');
+
+          achs('<= Leave', () => {
+              move_to_area(chss.intro_village_center, false);
+          })
+      }
+    })
+
     chss.intro_marketplace = new Chs({
-        id: 103,
+        id: 104,
         sl: () => {
             u_loc('Village Center, Marketplace');
             chs("All of the stalls are closed up. No one seems to be around.")
@@ -16188,7 +16214,7 @@ function define_areas() {
 
 
     chss.intro_village_outskirts = new Chs({
-        id: 104,
+        id: 105,
         sl: () => {
             u_loc('Village Outskirts');
 
@@ -16213,7 +16239,7 @@ function define_areas() {
 
 
     chss.intro_western_woods1 = new Chs({
-        id: 105,
+        id: 106,
         sl: () => {
             u_loc('Western Woods, The Wooden Gate');
             chs('The woods are silent. You spot an old lodge. Walking up a little closer, you see a handwritten note posted to the front door.');
@@ -16240,7 +16266,7 @@ function define_areas() {
 
 
     chss.intro_western_woods_note = new Chs({
-        id: 106,
+        id: 107,
         sl: () => {
             // don't need to update location here
             chs('<div style="text-align:left;margin-left:4px;">"Gone up north for the time being. For any poor soul who\'s wandered out here\
@@ -16255,7 +16281,7 @@ function define_areas() {
 
 
     chss.intro_western_woods2 = new Chs({
-        id: 107,
+        id: 108,
         sl: () => {
             u_loc('Deep Forest, Western Woods');
             chs('You feel the hairs on the back of your neck stand up as the wind that flows around the trees momentarily\
@@ -16291,7 +16317,7 @@ function define_areas() {
 
 
     chss.intro_western_woods3 = new Chs({
-        id: 108,
+        id: 109,
         sl: () => {
             u_loc('Deep Forest, Western Woods');
             chs('A furred creature swiftly approaches. You can barely follow its movements with your eyes. It gives off a sense of pressure that feels crushing. You can barely move.');
@@ -16311,7 +16337,7 @@ function define_areas() {
 
 
     chss.intro_western_woods_btl = new Chs({
-        id: 109,
+        id: 110,
         sl: () => {
             zone_init(zone.intro_woods);
         }
