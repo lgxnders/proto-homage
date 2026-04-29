@@ -303,7 +303,7 @@ function setup_world () {
 }
 
 function save(verbose=false) {  
-    if (verbose===true) console.log("Saving game...");
+    if (verbose===true) console.log("saving game...");
 
     const storage = window.localStorage;
     global.flags.savestate = true;
@@ -317,7 +317,7 @@ function save(verbose=false) {
         now.getHours() + ':' +
         (now.getMinutes() >= 10 ? now.getMinutes() : '0' + now.getMinutes()) + ':' +
         (now.getSeconds() >= 10 ? now.getSeconds() : '0' + now.getSeconds());
-    dom.sl_extra.innerHTML = 'Last save: ' + global.last_save;
+    dom.save_load_extra.innerHTML = 'last save: ' + global.last_save;
 
     const freeze_previous = global.flags.m_freeze;
     global.flags.m_freeze = true;
@@ -1046,7 +1046,7 @@ function load(save_data, verbose=false) {
     wdrseason(global.flags.ssngaijin);
     dom.d_moon.style.display = global.flags.isday ? 'none' : '';
 
-    if (global.last_save) dom.sl_extra.innerHTML = 'Last save: ' + global.last_save;
+    if (global.last_save) dom.save_load_extra.innerHTML = 'last save: ' + global.last_save;
     dom.nthngdsp.style.display = 'none';
     dom.ctrwin6.style.display = 'none';
     invbtsrst();
@@ -1076,7 +1076,7 @@ function load(save_data, verbose=false) {
     }
 
     if (global.flags.autosave === true) {
-        dom.autosves.checked = true;
+        dom.autosves_checkbox.checked = true;
         timers.autos = setInterval(() => save(false), 30000);
     }
 
@@ -13824,79 +13824,134 @@ function define_dom_references() { // @Todo organize
     }
 
     // save/load/version footer
-    dom.sl = addElement(document.body,'div','sl','noselect');
-    dom.sl.style.zIndex=10000;
-    dom.sl_s = addElement(dom.sl,'span',null,'sl');
-    dom.sl_s.innerHTML='save'; 
-    dom.sl_s.addEventListener('click', ()=>{
+    dom.save_load = addElement(document.body, 'div', 'save_load', 'noselect');
+    dom.save_load.style.zIndex = 5000;
+
+    dom.save_load_save_btn = addElement(dom.save_load, 'span', null, 'save_load');
+    dom.save_load_save_btn.innerHTML = 'save'; 
+    dom.save_load_save_btn.addEventListener('click', ()=>{
         save(false);
-        let temp_txt = addElement(dom.sl,'span');
-        temp_txt.style.fontSize='.9em';
-        temp_txt.style.padding='3px';
-        temp_txt.innerHTML='saved...';
+        let temp_txt = addElement(dom.save_load, 'span');
+        temp_txt.style.fontSize = '0.9em';
+        temp_txt.style.padding = '3px';
+        temp_txt.innerHTML = 'saved...';
         fade(temp_txt);
-        setTimeout(()=>{dom.sl.removeChild(temp_txt)},500)
+        setTimeout(()=>{dom.save_load.removeChild(temp_txt)}, 500);
     });
-    dom.sl_l = addElement(dom.sl,'span',null,'sl');
-    dom.sl_l.innerHTML='load';
-    dom.sl_l.addEventListener('click', ()=>{
+
+    dom.save_load_load_btn = addElement(dom.save_load, 'span', null, 'save_load');
+    dom.save_load_load_btn.innerHTML = 'load';
+    dom.save_load_load_btn.addEventListener('click', ()=>{
         load(null, false)
-        let temp_txt = addElement(dom.sl,'span');
-        temp_txt.style.fontSize='.9em';
-        temp_txt.style.padding='3px';
-        temp_txt.innerHTML='loaded...';
+        let temp_txt = addElement(dom.save_load, 'span');
+        temp_txt.style.fontSize = '0.9em';
+        temp_txt.style.padding = '3px';
+        temp_txt.innerHTML = 'loaded...';
         fade(temp_txt);
-        setTimeout(()=>{dom.sl.removeChild(temp_txt)},500)
-    });
-    dom.sl_extra = addElement(dom.sl,'span',null,'sl');
-    dom.sl_extra.style.borderLeft='none';
-    dom.sl_extra.innerHTML='<span style="color:crimson">game not saved!</span>';
-
-    dom.autosve = addElement(dom.sl,'span',null,'sl');
-    dom.autosve.innerHTML='Autosave';
-    dom.autosve.style.position='fixed';
-    dom.autosve.style.width='auto';
-    dom.autosve.style.right='139px';
-    dom.autosve.style.bottom='1px';
-    dom.autosve.style.paddingRight='20px';
-    
-    dom.autosves = addElement(dom.autosve,'input'); dom.autosves.type='checkbox';
-    dom.autosves.margin=0; dom.autosves.style.position='fixed';if(typeof InstallTrigger === 'undefined') dom.autosves.style.bottom='inherit';
-    dom.autosves.addEventListener('click',function(){
-      global.flags.autosave=!global.flags.autosave;
-      if(global.flags.autosave===true)  timers.autos=setInterval(function(){save(false);},30000); else clearInterval(timers.autos)
-    });
-    dom.sl_h = addElement(dom.sl,'span',null,'sl'); dom.sl_h.innerHTML='>>'; dom.sl_h.style.right='214px'; dom.sl_h.style.position='fixed';dom.sl_h.style.width='auto'; dom.sl_h.style.bottom='1px';
-    dom.sl_h.addEventListener('click',()=>{
-      dom.sl.style.display='none'; if(dom.sl_h_n) empty(dom.sl_h_n); 
-      dom.sl_h_n = addElement(document.body,'span',null,'sl'); dom.sl_h_n.innerHTML='<<';
-      dom.sl_h_n.style.right=0;dom.sl_h_n.style.position='absolute'; dom.sl_h_n.style.bottom=0;dom.sl_h_n.style.width=14; dom.sl_h_n.style.backgroundColor='lightgrey'
-      dom.sl_h_n.addEventListener('click',()=>{
-        dom.sl.style.display=''; empty(dom.sl_h_n); document.body.removeChild(dom.sl_h_n);
-      });
+        setTimeout(()=>{dom.save_load.removeChild(temp_txt)}, 500);
     });
 
-    dom.vrs = addElement(dom.sl,'div',null,'sl');
-    dom.vrs.style.position='fixed';
-    dom.vrs.style.width='auto';
-    dom.vrs.innerHTML = 'v470';
-    dom.vrs.style.right='105px';
-    dom.vrs.style.bottom='1px';
-    dom.vrs.style.color='black';
-    dom.vrs.style.textDecoration='underline';
-    dom.vrs.addEventListener('click',function(){
-        window.alert('This is a mod of Proto23, based on version 470. This is not the official, updated game.')
+    // shows the time of the last save or indicates an unsaved game
+    dom.save_load_extra = addElement(dom.save_load,'span',null,'save_load');
+    dom.save_load_extra.innerHTML='<span style="color:crimson">game not saved!</span>';
+
+    // simply pushes whatever elements in the footer that come next to the RIGHT of the screen
+    dom.save_load_divider = addElement(dom.save_load, 'span', 'save_load_divider');
+
+    // debug menu
+    dom.__dbg_menu = addElement(dom.save_load, 'span', 'dbg_menu', 'save_load');
+    dom.__dbg_menu.innerHTML = 'debug';
+
+    dom.__dbg_menu.addEventListener('click', () => {
+
+        // if there is already a menu created, don't create another one.
+        if (dom.__dbg_menu_1) {
+            return;
+        }
+
+        dom.__dbg_menu_1 = addElement(document.body, 'div', 'dbg_menu_1', 'dbg_menu');
+
+        dom.dbg_btn_1 = addElement(dom.__dbg_menu_1, 'div', null, 'dbg_btn');
+        dom.dbg_btn_2 = addElement(dom.__dbg_menu_1, 'div', null, 'dbg_btn');
+        //dom.dbg_btn_3 = addElement(dom.__dbg_menu_1, 'div', null, 'dbg_btn');
+        //dom.dbg_btn_4 = addElement(dom.__dbg_menu_1, 'div', null, 'dbg_btn');
+        //dom.dbg_btn_5 = addElement(dom.__dbg_menu_1, 'div', null, 'dbg_btn');
+        //dom.dbg_btn_6 = addElement(dom.__dbg_menu_1, 'div', null, 'dbg_btn');
+
+        dom.dbg_btn_1.innerHTML = 'Go to Intro Beast';
+        dom.dbg_btn_1.addEventListener('click', () => {
+            __dbgqs();
+            useItem(item.handful_pills);
+            move_to_area(chss.intro_western_woods3);
+        });
+
+        dom.dbg_btn_2.innerHTML = 'Go to Wake Up sequence';
+        dom.dbg_btn_2.addEventListener('click', () => {
+            __dbgqs();
+            useItem(item.handful_pills);
+            move_to_area(chss.shack);
+        });
+
+
+        dom.__dbg_menu_1.addEventListener('click', () => {
+            document.body.removeChild(dom.__dbg_menu_1);
+            dom.__dbg_menu_1 = null;
+        });
     });
 
-    dom.sl_kill = addElement(dom.sl,'span',null,'sl');
-    dom.sl_kill.style.position='fixed';
-    dom.sl_kill.style.width='auto';
-    dom.sl_kill.innerHTML='delete the save';
-    dom.sl_kill.style.right='5px';dom.sl_kill.style.bottom='1px';
-    dom.sl_kill.addEventListener('click', ()=>{
+
+    // autosave element
+    dom.autosve = addElement(dom.save_load,'span', 'autosve' ,'save_load');
+    dom.autosve.innerHTML='autosave';
+
+    // the actual checkbox for the autosave element
+    dom.autosves_checkbox = addElement(dom.autosve, 'input', 'autosves_checkbox');
+    dom.autosves_checkbox.type='checkbox';
+    if (typeof InstallTrigger === 'undefined') dom.autosves_checkbox.style.bottom='inherit';
+    dom.autosves_checkbox.addEventListener('click',function(){
+        global.flags.autosave =! global.flags.autosave;
+        if (global.flags.autosave===true) timers.autos=setInterval(function(){save(false);},30000); else clearInterval(timers.autos)
+    });
+
+    // delete save btn
+    dom.save_load_kill = addElement(dom.save_load,'span',null,'save_load');
+    dom.save_load_kill.innerHTML='delete save';
+    dom.save_load_kill.addEventListener('click', ()=>{
         localStorage.clear();
         msg('Save deleted','');
         move_to_area(chss.intro);
+    });
+
+    // version
+    dom.version = addElement(dom.save_load, 'div', 'version', 'save_load');
+    dom.version.innerHTML = 'v470';
+    dom.version.addEventListener('click',function(){
+        window.alert('This is a mod of Proto23 based on version 470. This is not the official game.')
+    });
+
+    // the little arrows that close the save_load footer
+    dom.save_load_arr = addElement(dom.save_load,'span', 'save_load_arr','save_load');
+    dom.save_load_arr.innerHTML='>>';
+
+    dom.save_load_arr.addEventListener('click',()=>{
+        dom.save_load.style.display='none';
+        if(dom.save_load_arr_n) empty(dom.save_load_arr_n); 
+
+        dom.save_load_arr_n = addElement(document.body,'span',null,'save_load');
+        dom.save_load_arr_n.innerHTML='<<';
+        dom.save_load_arr_n.style.right=0;
+        dom.save_load_arr_n.style.position='fixed';
+        dom.save_load_arr_n.style.bottom=0;
+        dom.save_load_arr_n.style.marginBottom='2px';
+        dom.save_load_arr_n.style.borderRight='none';
+        dom.save_load_arr_n.style.minWidth='6px';
+        dom.save_load_arr_n.style.backgroundColor='lightgrey'
+
+        dom.save_load_arr_n.addEventListener('click',()=>{
+            dom.save_load.style.display='';
+            empty(dom.save_load_arr_n);
+            document.body.removeChild(dom.save_load_arr_n);
+        });
     });
 
     update_db();
@@ -16133,25 +16188,6 @@ function define_areas() {
                         });
                     });
                 });
-            });
-
-            /*
-            achs('DEBUG : Intro Western Woods', () => {
-                __dbgqs();
-                move_to_area(chss.intro_western_woods1);
-            });
-            */
-
-            achs('DEBUG : Intro Beast', () => {
-                __dbgqs();
-                useItem(item.handful_pills);
-                move_to_area(chss.intro_western_woods3);
-            });
-
-            achs('DEBUG : Wake Up', () => {
-                __dbgqs();
-                useItem(item.handful_pills);
-                move_to_area(chss.shack);
             });
         }
     });
@@ -20056,7 +20092,7 @@ function display_load_error() {
     dom.error.style.position='absolute';
     dom.error.style.fontSize='2em';
     dom.error.style.color='red';
-    dom.error.style.zIndex=9999;
+    dom.error.style.zIndex=4000;
     dom.error.style.lineHeight='normal';
     dom.error.style.opacity=0;
 
