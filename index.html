@@ -129,7 +129,6 @@ function define_global() {
         unl_house: false,
         unl_dojo: false,
 
-        taken_handfulsp2: false,
         finished_intro: false, 
         rock_path_show_cat: false,
         drunk_from_river: false,
@@ -8281,7 +8280,6 @@ function define_items() {
         giveExp(11000, true, true, true, false,
         "You feel as though you've gotten your strength back.", 'lightyellow');
         this.amount--;
-        global.flags.taken_handfulsp2 = true;
     }
 }
 
@@ -13865,41 +13863,34 @@ function define_dom_references() { // @Todo organize
 
     dom.__dbg_menu.addEventListener('click', () => {
 
-        // if there is already a menu created, don't create another one.
+        // if there is already a menu created, don't create another one
         if (dom.__dbg_menu_1) {
             return;
         }
 
+        const dbgButtons = [
+            { label: 'Go to Intro Beast', action: () => {
+                __dbgqs();
+                move_to_area(chss.intro_western_woods3);
+            }},
+            { label: 'Go to Wake Up sequence', action: () => {
+                __dbgqs();
+                move_to_area(chss.shack);
+            }},
+            { label: 'Get water charm', action: () => {
+                __dbgqs();
+                giveItem(acc.river_charm);
+                move_to_area(chss.shack);
+            }},
+        ];
+
         dom.__dbg_menu_1 = addElement(document.body, 'div', 'dbg_menu_1', 'dbg_menu');
 
-        dom.dbg_btn_1 = addElement(dom.__dbg_menu_1, 'div', null, 'dbg_btn');
-        dom.dbg_btn_2 = addElement(dom.__dbg_menu_1, 'div', null, 'dbg_btn');
-        dom.dbg_btn_3 = addElement(dom.__dbg_menu_1, 'div', null, 'dbg_btn');
-        //dom.dbg_btn_4 = addElement(dom.__dbg_menu_1, 'div', null, 'dbg_btn');
-        //dom.dbg_btn_5 = addElement(dom.__dbg_menu_1, 'div', null, 'dbg_btn');
-        //dom.dbg_btn_6 = addElement(dom.__dbg_menu_1, 'div', null, 'dbg_btn');
-
-        dom.dbg_btn_1.innerHTML = 'Go to Intro Beast';
-        dom.dbg_btn_1.addEventListener('click', () => {
-            __dbgqs();
-            useItem(item.handful_pills);
-            move_to_area(chss.intro_western_woods3);
+        dbgButtons.forEach(b => {
+            let btn = addElement(dom.__dbg_menu_1, 'div', null, 'dbg_btn');
+            btn.innerHTML = b.label;
+            btn.addEventListener('click', b.action);
         });
-
-        dom.dbg_btn_2.innerHTML = 'Go to Wake Up sequence';
-        dom.dbg_btn_2.addEventListener('click', () => {
-            __dbgqs();
-            useItem(item.handful_pills);
-            move_to_area(chss.shack);
-        });
-
-        dom.dbg_btn_3.innerHTML = 'Get water charm';
-        dom.dbg_btn_3.addEventListener('click', () => {
-            __dbgqs();
-            giveItem(acc.river_charm);
-            move_to_area(chss.shack);
-        });
-
 
         dom.__dbg_menu_1.addEventListener('click', () => {
             document.body.removeChild(dom.__dbg_menu_1);
@@ -16416,8 +16407,7 @@ function define_areas() {
             giveSkExp(skl.unc, 853, showLevelUp=false); //give unarmed mastery
             giveSkExp(skl.fgt, 335, showLevelUp=false);
 
-            giveItem(item.leather_wallet); // coinage
-            giveItem(item.handful_pills); // pills
+            //giveItem(item.leather_wallet); // coinage
 
             dom.d_weather.style.display = 'none';
             dom.d_time.style.display    = 'none';
@@ -16425,48 +16415,47 @@ function define_areas() {
             appear(dom.ctr_1);
             appear(dom.ctr_1a);
 
-            chs('???: "Kid..."'); 
-            achs('"..."', () => {
+            //I came down from a dojo in the mountains...
+
+
+            chs("You've been walking for quite a while now. You've been searching for a long time, for that prophesized hero from that little village. <br> As per your teacher's guidance you're..."); 
+            achs('"...Finally here..."', () => {
                 appear(dom.d_weather, dom.d_weathert); // show weather
 
-                chs('???: "You\'ve gotta wake up. You can\'t stay here..."');
-                achs('"Where am I..?"', () => {
+                chs("...where the road thins out and the trees grow closer on either side. A village comes into view. Or, at least, what's left of it. Blackened frames of wooden houses and caved-in roofs with the smell of smoke in the air.");
+                achs('"What the hell happened here?"', () => {
 
                     appear(dom.location); // show location
-                    chs('???: "You\'re outside the village dojo... I found you here unconscious. Do you remember how you first arrived here?"');
-                    achs('"I came down from a dojo in the mountains..."', () => {
+                    chs("You speak to yourself outloud, as if to summon forth somebody whose remained silent - but nobody comes. <br> The main road through the village is empty, doors are boarded, business is not booming, flowers are not blooming.");
+                    achs('"..."', () => {
                         empty(dom.mscont)  // clear message log
                         appear(dom.d0);    // show player menu
                         appear(dom.gmsgs); // show message log
 
-                        chs('???: "You have some experience then, huh? Yet even still, someone like you can end up in a place like this."');
-                        achs('"..."', () => {
+                        chs("You didn't come all this way for nothing - you're not a quitter, and so you explore the dilapidated village.");
+                        achs('"Okay..."', () => {
                             appear(dom.d1m);
                             appear(dom.d_time);
-                            chs('???: "It\'s getting dangerous out there... you ought to be more mindful of your surroundings..."');
-                            achs('"..."', () => {
-                                appear(dom.inv_ctx); // show inventory
-                                appear(dom.ct_ctrl); // center-bottom clickables
-                                
-                                global.flags.aw_u  = true;
-                                global.flags.dm1ap = true;
-                                global.flags.asbu  = true;
-                                global.flags.sklu  = true;
-                                global.flags.actsu = true;
-                                global.flags.jnlu  = true;
+                            appear(dom.inv_ctx); // show inventory
+                            appear(dom.ct_ctrl); // center-bottom clickables
+                            
+                            global.flags.aw_u  = true;
+                            global.flags.dm1ap = true;
+                            global.flags.asbu  = true;
+                            global.flags.sklu  = true;
+                            global.flags.actsu = true;
+                            global.flags.jnlu  = true;
 
-                                /*
-                                dom.ct_bt6.innerHTML = 'journal';
-                                dom.ct_bt1.innerHTML = 'assemble';
-                                dom.ct_bt3.innerHTML = 'actions';
-                                dom.ct_bt2.innerHTML = 'skills';
-                                */
+                            /*
+                            dom.ct_bt6.innerHTML = 'journal';
+                            dom.ct_bt1.innerHTML = 'assemble';
+                            dom.ct_bt3.innerHTML = 'actions';
+                            dom.ct_bt2.innerHTML = 'skills';
+                            */
 
-                                m_update();
-                                
-                                move_to_area(chss.intro_village_center);
-
-                            });
+                            m_update();
+                            
+                            move_to_area(chss.intro_village_center);
                         });
                     });
                 });
@@ -16508,7 +16497,7 @@ function define_areas() {
       sl: () => {
           u_loc('Village, Center Message Board');
 
-          chs('An empty, dilapitated wooden board lies ahead.');
+          chs("An empty, dilapitated wooden board lies ahead. <br> There don't seem to be any postings.");
 
           achs('<= Leave', () => {
               move_to_area(chss.intro_village_center, false);
@@ -16536,16 +16525,12 @@ function define_areas() {
         sl: () => {
             u_loc('Village Outskirts');
 
-            chs('There is a guard posted at the southern gate. He gives you a shifty look, but otherwise doesn\'t seem to mind you leaving.');
+            chs('You see two gates that lead in the direction of the forest that surrounds the village. One of the gates has been barricarded off.');
             //@Todo need more dialogue / a reason for the guard not wanting you one way but letting you go another. player tells them the reason ?
-
-            achs('=> Enter Southern Forest', () => {
-                msg('Gate Guard: "I can\'t grant you permission nor clearance to enter these woods. They are protected."','yellow');
-            });
             
             achs('=> Enter Western Woods', () => {
-                msg('I better watch myself in here.', 'lightyellow');
-                global.time += HOUR;
+                //msg('I better watch myself in here.', 'lightyellow');
+                //global.time += HOUR;
                 move_to_area(chss.intro_western_woods1);
             });
 
@@ -16574,7 +16559,7 @@ function define_areas() {
 
             if (global.flags.show_exit_from_intro_woods1) {
                 achs("<= Return back to the village", () => {
-                    msg('I need to keep moving. I need to find <i>that place</i>.', 'lightyellow');
+                    msg('I need to keep moving. I need to find out more about that <i>legendary hero</i>.', 'lightyellow');
                     global.flags.show_exit_from_intro_woods1 = false;
                     move_to_area(chss.intro_western_woods1); // lets refresh that choice so that it disappears
                 });
@@ -16606,26 +16591,12 @@ function define_areas() {
                 circles around you. You brush that feeling off, but your footing stays rooted into the ground.');
 
             achs("Continue deeper into the woods =>", () => {
-                if (!global.flags.mountain_pills_taken) {
-                    if (hasItem(item.handful_pills)) {
-                        msg('It\'s better to be safe than sorry.', 'lightyellow');
-                        msg('You consume the handful of pills.', 'darkgrey');     
-                        useItem(item.handful_pills)
-                        global.flags.mountain_pills_taken = true;               
-                    } else {
-                      msg('It\'s better to be safe than sorry.', 'lightyellow');
-                      global.flags.mountain_pills_taken = true;
-                    }
-                } else {
-                    msg('I took those spirit pills. I should be fine...', 'lightyellow');
-                }
-                global.time += HOUR;
                 move_to_area(chss.intro_western_woods3)
             });
 
             if (global.flags.show_exit_from_intro_woods2) {
                 achs("<= Return back to the village", () => {
-                    msg('I need to keep moving. I need to find <i>that place</i>.', 'lightyellow');
+                    msg('I need to keep moving. I need to find out more about that <i>legendary hero</i>.', 'lightyellow');
                     global.flags.show_exit_from_intro_woods2 = false;
                     move_to_area(chss.intro_western_woods2);
                 });
@@ -16672,7 +16643,7 @@ function define_areas() {
                 u_loc('Shack, ???');
             }
 
-            chs('You\'re in a small wooden shack. There\'s a bed here, a small kitchenette, and a small desk. So very humble.');
+            chs('You\'re in a small wooden shack. There\'s a bed here, a kitchenette, and a desk. So very humble.');
 
             achs('<= Go outside', () => {
                 if (!global.flags.know_training_grounds) global.flags.know_training_grounds = true;
