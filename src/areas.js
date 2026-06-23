@@ -881,7 +881,6 @@ function Chs(op={}) {
 
 
 function define_areas() {
-// @Todo  factor into function? Maybe the indentation would be too crazy though? refactor the way dialogue and choice works?
     chss.intro = new Chs({
         id: 101,
         sl: () => {
