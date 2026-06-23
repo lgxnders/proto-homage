@@ -232,7 +232,7 @@ function define_dom_references() { // @Todo organize
     dom.d8m2.style.right='0px';dom.d8m2.style.position='absolute';
     dom.d8m2.addEventListener('click',function(){if(!global.flags.civil)global.flags.btl=true;});
     dom.d7m_c = addElement(dom.d1m,'div','ainfo');
-    dom.d7m_c.style.lineHeight = '1';
+    dom.d7m_c.style.lineHeight = '0.85';
     dom.d7m = addElement(dom.d7m_c,'small');
     dom.d7m.update = function () {
         if (global.current_z.name == "Somewhere") { 
