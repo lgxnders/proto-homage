@@ -15,6 +15,7 @@ import './masteries.js';
 import './debug.js';
 import './titles.js';
 import './time.js';
+import './effects.js';
 
 window.YEAR   = YEAR;
 window.MONTH  = MONTH;

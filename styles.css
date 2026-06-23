@@ -28,7 +28,7 @@ input:focus {
     border: solid 2px rgb(12,86,195);
     height: 100%;
     border-bottom: none;
-    padding-top: 3;
+    padding-top: 3px;
     height: initial;
 }
 
@@ -74,8 +74,8 @@ input:focus {
     font-size: .9em;
     background-color: rgb(46, 41, 169);
     border-bottom: 1px cornflowerblue solid;
-    padding-top: 2;
-    padding-bottom: 2;
+    padding-top: 2px;
+    padding-bottom: 2px;
     text-align: center;;
 }
 
@@ -133,8 +133,8 @@ input:focus {
     border: solid 1px lime;
     width: 14px;
     height: 13px;
-    padding-top: 2;
-    padding-bottom: 2;
+    padding-top: 2px;
+    padding-bottom: 2px;
 }
 
 .spc_a {
@@ -307,7 +307,7 @@ input:focus {
 .chs_s {
     height: 15px;
     border-bottom: solid 1px #3848c0;
-    padding-top: 5;
+    padding-top: 5px;
     text-align: left;
     font-size: .85em;
     padding-left: 5px;
@@ -718,10 +718,8 @@ input:focus {
 
 #inv_ctx_b {
     position: absolute;
-    top: 26px;
     left: 0;
     right: 0;
-    bottom: 36px;
 }
 
 #inv_control {

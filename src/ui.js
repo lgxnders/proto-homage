@@ -678,19 +678,19 @@ function define_dom_references() { // @Todo organize
           this.qstcell.addEventListener('click',function(){empty(dom.qstbody); this.qmain=addElement(dom.qstbody,'div');
             this.qmain.style.height=359; this.qmain.style.width='100%'; this.qmain.style.background='linear-gradient(180deg,#040b2d,#29071c)';this.qmain.style.textAlign='center'
             this.qlabl=addElement(this.qmain,'small'); this.qlabl.innerHTML='#'+qsts[a].id+': '+qsts[a].name+' [<small style="color:'+rarc+';text-shadow:'+rarts+'">'+rar+'</small>]'+(qsts[a].data.done&&!qsts[a].data.started?'<span style="color:lime"> completed</span>':'<span style="color:yellow"> in progress</span>');
-            this.qlabl.style.padding=6; this.qlabl.style.borderBottom='dotted 2px #2b408a'; this.qlabl.style.backgroundColor='#12152f';this.qlabl.style.display='inherit'
+            this.qlabl.style.padding='6px'; this.qlabl.style.borderBottom='dotted 2px #2b408a'; this.qlabl.style.backgroundColor='#12152f';this.qlabl.style.display='inherit'
             this.qstatba=addElement(this.qmain,'small'); this.qstatba.innerHTML='Location: <span style="color:green">'+qsts[a].loc+'</span>';
             this.qstatba.style.borderBottom='1px solid #2b408a'; this.qstatba.style.display='block';
-            this.qdsc=addElement(this.qmain,'div');  this.qdsc.innerHTML=qsts[a].desc; this.qdsc.style.padding=12; this.qdsc.style.borderBottom='dotted 2px #2b408a';
+            this.qdsc=addElement(this.qmain,'div');  this.qdsc.innerHTML=qsts[a].desc; this.qdsc.style.padding='12px'; this.qdsc.style.borderBottom='dotted 2px #2b408a';
             this.qdsc.style.color='#f7ff82'
             this.qtodo=addElement(this.qmain,'div'); let goals = qsts[a].data.done&&!qsts[a].data.started?qsts[a].goalsf():qsts[a].goals(); 
-            this.qtodo.style.padding=6; 
+            this.qtodo.style.padding='6px'; 
             this.qtodo.innerHTML='「Objectives」'; this.qtodo.style.color='#ffc319'; this.qtodo.style.backgroundColor='#12152f'
             this.qgoalbod=addElement(this.qmain,'div');
             this.qgoalbod.style.borderBottom='dotted 2px #2b408a';
             for(let b in goals){
               this.qtodoitm=addElement(this.qgoalbod,'div');
-              this.qtodoitm.style.padding=4; this.qtodoitm.style.fontSize='smaller';this.qtodoitm.style.backgroundColor='#182247';
+              this.qtodoitm.style.padding='4px'; this.qtodoitm.style.fontSize='smaller';this.qtodoitm.style.backgroundColor='#182247';
               this.qtodoitm.style.borderTop='1px solid #3b3158'
               this.qtodoitm.innerHTML=goals[b];
             }
@@ -737,7 +737,7 @@ function define_dom_references() { // @Todo organize
       this.jlbrw2s2.addEventListener('click',function(){ empty(dom.ctrwin6); global.lw_op=-1; 
         dom.ch_1=addElement(dom.ctrwin6,'div'); dom.ch_1.style.height='359px';dom.ch_1.style.background='linear-gradient(0deg, rgb(24, 18, 51), rgb(0, 44, 87))';
         dom.flsthdr = addElement(dom.ch_1,'div');dom.flsthdr.innerHTML='S T A T S'; dom.flsthdr.style.background='linear-gradient(0deg,rgb(21, 17, 49),rgb(0, 42, 85))';
-        dom.flsthdr.style.borderBottom='1px #44c dashed'; dom.flsthdr.style.padding=2; dom.flsthdr.style.fontSize='small'; dom.flsthdr.style.height=18
+        dom.flsthdr.style.borderBottom='1px #44c dashed'; dom.flsthdr.style.padding='2px'; dom.flsthdr.style.fontSize='small'; dom.flsthdr.style.height=18
         dom.statbod=addElement(dom.ch_1,'div'); dom.statbod.style.overflow='auto'; dom.statbod.style.maxHeight='93%'; dom.statbod.style.background='linear-gradient(90deg,rgb(1,1,87),rgb(55,7,57))';  dom.ch_1.style.textAlign='center';
         dom.tccon=addElement(dom.statbod,'small',null,'sttc'); dom.tcleft=addElement(dom.tccon,'div',null,'sttl'); dom.tcright=addElement(dom.tccon,'div',null,'sttr');
         dom.tcleft.innerHTML='Game start time'; dom.tcright.innerHTML=global.stat.sttime
@@ -1156,7 +1156,7 @@ function define_dom_references() { // @Todo organize
 
         dom.ct_bt4_5a_nc = addElement(document.body,'div');
         dom.ct_bt4_5a_nc.style.position='absolute';
-        dom.ct_bt4_5a_nc.style.padding=2;
+        dom.ct_bt4_5a_nc.style.padding='2px';
         dom.ct_bt4_5a_nc.style.top=370;
         dom.ct_bt4_5a_nc.style.left=330;
         dom.ct_bt4_5a_nc.style.width=600;
@@ -1206,7 +1206,7 @@ function define_dom_references() { // @Todo organize
       global.flags.impatv = true;
       dom.ct_bt4_5b_nc = addElement(document.body,'div');
       dom.ct_bt4_5b_nc.style.position='absolute';
-      dom.ct_bt4_5b_nc.style.padding=2;
+      dom.ct_bt4_5b_nc.style.padding='2px';
       dom.ct_bt4_5b_nc.style.top=370;
       dom.ct_bt4_5b_nc.style.left=330;
       dom.ct_bt4_5b_nc.style.width=600;
@@ -1366,7 +1366,10 @@ function define_dom_references() { // @Todo organize
     dom.d5_3_1.update=function(){this.innerHTML = 'energy: '+format3(Math.round(you.sat).toString())+'/'+format3(you.satmax.toString())+' eff: '+Math.round(you.efficiency()*100)+'%'; dom.d5_3.style.width = you.sat>=0?100*you.sat/you.satmax+'%':'0%'};
     dom.d6.update = function(){this.innerHTML = 'rank: '+format3(you.rank().toString())}; dom.d6.update();
     dom.hit_c = function(){
-        let hit_a = hit_calc(1); let hit_b = hit_calc(2); let drk=(global.flags.isdark&&!cansee()); 
+        console.log(`running hit_c func`) // @Todo remove
+        let hit_a = hit_calc(1);
+        let hit_b = hit_calc(2);
+        let drk=(global.flags.isdark&&!cansee()); 
         if(hit_a>100) hit_a=100; else if(hit_a<0) hit_a=0;
         if(hit_b>100) hit_b=100; else if(hit_b<0) hit_b=0;
         dom.d8.innerHTML = 'hit chance: <span style="color:'+(drk?'darkgrey':'')+'">'+Math.round(hit_a*(drk?(.3+skl.ntst.lvl*.07):1))+'%</span> / dodge chance: '+(100-Math.round(hit_b))+'%'+(you.mods.ddgmod!==0?('(<span style="color:orange">'+you.mods.ddgmod*100+'%</span>)'):'');
@@ -1650,7 +1653,7 @@ function dscr(c, what, type, ttl, dsc, id) {
         _.dp_mn.style.textShadow = "1px 1px black";
         _.dp_mn.style.position = "inherit";
         _.dp_mn.style.top = -4;
-        _.dp_mn.style.padding = 1;
+        _.dp_mn.style.padding = '1px';
         _.dp_mn.style.left = "35%";
         let dp = what.dp * 100 / what.dpmax;
         _.dp_m.style.width = dp + "%";
@@ -1924,8 +1927,8 @@ function dscr(c, what, type, ttl, dsc, id) {
     _.dl.innerHTML = "<br>Rank: ";
     _.db = addElement(_.dl, "div");
     for (let i = 0; i < what.rar; i++) _.db.innerHTML += "★";
-    _.db.style.paddingTop = 12;
-    _.db.style.paddingLeft = 6;
+    _.db.style.paddingTop = '12px';
+    _.db.style.paddingLeft = '6px';
     switch (what.rar) {
       case 0:
         {
@@ -2052,7 +2055,7 @@ function dscr(c, what, type, ttl, dsc, id) {
               _.dcell1b.style.color = "inherit";
               _.dcell1b.style.position = "absolute";
               _.dcell1b.style.right = 70;
-              _.dcell1b.style.paddingTop = 2;
+              _.dcell1b.style.paddingTop = '2px';
               _.dcell1b.innerHTML = what.drop[b].max;
               if (what.drop[b].min && what.drop[b].min !== what.drop[b].max) _.dcell1b.innerHTML += "-" + what.drop[b].min;
             }
@@ -2248,7 +2251,8 @@ function fght(att,def){
     }
     timers.btl2=setTimeout(function(){
         if(global.flags.btl===true){ 
-        doSingleAttack(sc, inn, !isyouinn);you.stat_r();
+          doSingleAttack(sc, inn, !isyouinn);
+          you.stat_r();
         }
     },500/global.fps);
 }
@@ -2722,6 +2726,7 @@ function removeEff(e, t) {
         if (e.x) {
             if (e.target.id === you.id) {
                 node = global.e_e.indexOf(e);
+
                 dom.d101.removeChild(dom.d101.children[node]);
                 global.e_e.splice(node, 1);
                 if (dom.d101.children.length > you.eff.length) {
@@ -2839,8 +2844,8 @@ function unequip(w,flags){if(!w.data||!w.data.uid) return;
         case 1:{dom.d7_slot_2.innerHTML = 'Shield';dom.d7_slot_2.removeAttribute('style');dom.d7_slot_2.style.color='grey'}break;
         case 2:{dom.d7_slot_3.innerHTML = 'Head';dom.d7_slot_3.removeAttribute('style');dom.d7_slot_3.style.color='grey'}break;
         case 3:{dom.d7_slot_4.innerHTML = 'Body';dom.d7_slot_4.removeAttribute('style');dom.d7_slot_4.style.color='grey'}break;
-        case 4:{dom.d7_slot_5.innerHTML = 'L arm';dom.d7_slot_5.removeAttribute('style');dom.d7_slot_5.style.color='grey'}break;
-        case 5:{dom.d7_slot_6.innerHTML = 'R arm';dom.d7_slot_6.removeAttribute('style');dom.d7_slot_6.style.color='grey'}break;
+        case 4:{dom.d7_slot_5.innerHTML = 'L Arm';dom.d7_slot_5.removeAttribute('style');dom.d7_slot_5.style.color='grey'}break;
+        case 5:{dom.d7_slot_6.innerHTML = 'R Arm';dom.d7_slot_6.removeAttribute('style');dom.d7_slot_6.style.color='grey'}break;
         case 6:{dom.d7_slot_7.innerHTML = 'Legs';dom.d7_slot_7.removeAttribute('style');dom.d7_slot_7.style.color='grey'}break;
         case 7:{dom.d7_slot_8.innerHTML = 'Accessory';dom.d7_slot_8.removeAttribute('style');dom.d7_slot_8.style.color='grey'}break;
         case 8:{dom.d7_slot_9.innerHTML = 'Accessory';dom.d7_slot_9.removeAttribute('style');dom.d7_slot_9.style.color='grey'}break;
@@ -2854,8 +2859,8 @@ function eqpres() {
     dom.d7_slot_2.innerHTML = 'Shield';
     dom.d7_slot_3.innerHTML = 'Head';
     dom.d7_slot_4.innerHTML = 'Body';
-    dom.d7_slot_5.innerHTML = 'L arm';
-    dom.d7_slot_6.innerHTML = 'R arm';
+    dom.d7_slot_5.innerHTML = 'L Arm';
+    dom.d7_slot_6.innerHTML = 'R Arm';
     dom.d7_slot_7.innerHTML = 'Legs';
     dom.d7_slot_8.innerHTML = 'Accessory';
     
